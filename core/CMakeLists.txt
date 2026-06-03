@@ -3,6 +3,8 @@
 add_library(core STATIC
     core.cpp
     core.h
+    portinfo.cpp
+    portinfo.h
 )
 
 target_link_libraries(core

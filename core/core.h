@@ -1,5 +1,4 @@
-#ifndef TESSERA_CORE_H
-#define TESSERA_CORE_H
+#pragma once
 
 #include <QString>
 
@@ -10,5 +9,3 @@ namespace tessera::core {
 QString version();
 
 } // namespace tessera::core
-
-#endif // TESSERA_CORE_H
