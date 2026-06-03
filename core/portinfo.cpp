@@ -12,13 +12,13 @@ std::vector<PortInfo> tessera::core::portinfo::scan_ports()
     for (auto port : serialPortInfos)
     {
         PortInfo port_info;
-        port_info.name_               = port.portName();
-        port_info.description_        = port.description();
-        port_info.manufacturer_       = port.manufacturer();
-        port_info.serial_number_      = port.serialNumber();
-        port_info.system_location_    = port.systemLocation();
-        port_info.vendor_identifier_  = port.vendorIdentifier();
-        port_info.product_identifier_ = port.productIdentifier();
+        port_info.name_            = port.portName();
+        port_info.description_     = port.description();
+        port_info.manufacturer_    = port.manufacturer();
+        port_info.serial_number_   = port.serialNumber();
+        port_info.system_location_ = port.systemLocation();
+        if (port.hasVendorIdentifier())  port_info.vendor_identifier_  = port.vendorIdentifier();
+        if (port.hasProductIdentifier()) port_info.product_identifier_ = port.vendorIdentifier();
         out.push_back(port_info);
     }
     

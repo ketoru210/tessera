@@ -6,6 +6,7 @@
 // Not an automated test suite; a hand-driven smoke-test console.
 
 #include <QTextStream>
+#include <qobject.h>
 
 #include "portinfo.h"
 
@@ -15,6 +16,10 @@ int main()
 
     const auto ports = tessera::core::portinfo::scan_ports();
 
+    auto fmt_id = [](const std::optional<qint16> &id) -> QString {
+        return id ? QStringLiteral("0x%1").arg(*id, 0, 16) : QStringLiteral("N/A");
+    };
+
     out << "Found " << ports.size() << " serial port(s):\n";
     for (const auto &port : ports) {
         out << '\n'
@@ -23,8 +28,8 @@ int main()
             << "  Manufacturer:       " << port.manufacturer_    << '\n'
             << "  Serial number:      " << port.serial_number_   << '\n'
             << "  System location:    " << port.system_location_ << '\n'
-            << "  Vendor identifier:  0x" << Qt::hex << port.vendor_identifier_  << Qt::dec << '\n'
-            << "  Product identifier: 0x" << Qt::hex << port.product_identifier_ << Qt::dec << '\n';
+            << "  Vendor identifier:  " << fmt_id(port.vendor_identifier_)  << '\n'
+            << "  Product identifier: " << fmt_id(port.product_identifier_) << '\n';
     }
 
     return 0;
