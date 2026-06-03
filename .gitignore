@@ -101,4 +101,3 @@ cmake_install.cmake
 
 # Generic user files
 *.user
-deploy.ps1

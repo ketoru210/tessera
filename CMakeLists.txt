@@ -18,3 +18,6 @@ qt_standard_project_setup()
 #   gui  - user interface (executable), links against core
 add_subdirectory(core)
 add_subdirectory(gui)
+
+# tools - console drivers to exercise core standalone (no GUI). Optional.
+add_subdirectory(tools)
