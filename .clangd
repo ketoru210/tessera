@@ -1,0 +1,14 @@
+CompileFlags:
+  CompilationDatabase: build/vscode
+  Add:
+    - --target=x86_64-w64-mingw32
+  Remove:
+    - -fno-keep-inline-dllexport
+    - -mthreads
+
+Diagnostics:
+  Suppress:
+    - drv_unknown_argument
+
+Index:
+  Background: Build
