@@ -6,9 +6,12 @@
 // Not an automated test suite; a hand-driven smoke-test console.
 
 #include <QTextStream>
-#include <qobject.h>
+#include <QEventLoop>
+#include <QTimer>
+#include <QCoreApplication>
 
 #include "portinfo.h"
+#include "serialport.h"
 
 
 void display_all_serial_port()
@@ -17,7 +20,7 @@ void display_all_serial_port()
 
     const auto ports = tessera::core::portinfo::scan_ports();
 
-    auto fmt_id = [](const std::optional<qint16> &id) -> QString {
+    auto fmt_id = [](const std::optional<quint16> &id) -> QString {
         return id ? QStringLiteral("0x%1").arg(*id, 0, 16) : QStringLiteral("N/A");
     };
 
@@ -35,9 +38,40 @@ void display_all_serial_port()
     }
 }
 
+void serial_io()
+{
+    QTextStream out(stdout);
+
+    tessera::core::SerialPort sp;
+    sp.connect(&sp, &tessera::core::SerialPort::data_received,
+               [&](const QByteArray& bytes) {
+                    out << bytes;
+               }
+    );
+
+    bool open = sp.open("COM5", 9600, QSerialPort::DataBits::Data8, 
+                        QSerialPort::StopBits::OneStop, QSerialPort::Parity::NoParity, 
+                        QSerialPort::FlowControl::NoFlowControl);
+
+    if (!open) 
+    {
+        out << " Open failed\n";
+        return;
+    }
+
+    sp.send("Hello world!\n");
+
+    QEventLoop loop;
+    QTimer::singleShot(3000, &loop, &QEventLoop::quit);
+    loop.exec();
+}
+
 int main(int argc, char* argv[])
 {
+    QCoreApplication app(argc, argv);
+
     display_all_serial_port();
+    serial_io();
 
     return 0;
 }

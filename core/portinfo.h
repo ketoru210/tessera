@@ -11,8 +11,8 @@ struct PortInfo
     QString manufacturer_;
     QString serial_number_;
     QString system_location_;
-    std::optional<qint16> vendor_identifier_;
-    std::optional<qint16> product_identifier_;
+    std::optional<quint16> vendor_identifier_;
+    std::optional<quint16> product_identifier_;
 };
 
 namespace tessera::core::portinfo
