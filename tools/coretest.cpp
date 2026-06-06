@@ -10,7 +10,8 @@
 
 #include "portinfo.h"
 
-int main()
+
+void display_all_serial_port()
 {
     QTextStream out(stdout);
 
@@ -20,8 +21,9 @@ int main()
         return id ? QStringLiteral("0x%1").arg(*id, 0, 16) : QStringLiteral("N/A");
     };
 
-    out << "Found " << ports.size() << " serial port(s):\n";
-    for (const auto &port : ports) {
+    out << "\n\nFound " << ports.size() << " serial port(s):\n";
+    for (const auto &port : ports) 
+    {
         out << '\n'
             << "  Port name:          " << port.name_            << '\n'
             << "  Description:        " << port.description_     << '\n'
@@ -31,6 +33,11 @@ int main()
             << "  Vendor identifier:  " << fmt_id(port.vendor_identifier_)  << '\n'
             << "  Product identifier: " << fmt_id(port.product_identifier_) << '\n';
     }
+}
+
+int main(int argc, char* argv[])
+{
+    display_all_serial_port();
 
     return 0;
 }
