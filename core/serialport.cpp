@@ -24,3 +24,22 @@ bool tessera::core::SerialPort::close()
     port_.close();
     return true;
 }
+
+void tessera::core::SerialPort::handle_ready_read()
+{
+    QByteArray bytes = port_.readAll();
+    read_count_ += bytes.size();
+    emit data_received(bytes);
+}
+
+bool tessera::core::SerialPort::send(const QByteArray& bytes)
+{
+    if (!is_open()) return false;
+
+    qint64 bytes_write = port_.write(bytes);
+
+    if (bytes_write == -1) return false;
+    
+    write_count_ += bytes_write;
+    return true;
+}
