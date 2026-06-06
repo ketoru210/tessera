@@ -5,6 +5,8 @@ add_library(core STATIC
     core.h
     portinfo.cpp
     portinfo.h
+    serialport.cpp
+    serialport.h
 )
 
 target_link_libraries(core

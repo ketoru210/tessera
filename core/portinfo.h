@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QSerialPort>
 #include <qobject.h>
 #include <vector>
 #include <optional>
