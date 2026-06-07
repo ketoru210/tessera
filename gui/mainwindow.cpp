@@ -104,6 +104,8 @@ MainWindow::MainWindow(QWidget *parent)
                 ui->port_button->setText(name);
                 ui->port_button->setProperty("selected", true);
                 ui->port_button->style()->polish(ui->port_button);
+
+                ui->connect_button->setEnabled(true);
             });
 }
 
