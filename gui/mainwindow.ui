@@ -492,7 +492,10 @@
             </item>
             <item row="1" column="1">
              <widget class="QComboBox" name="baud_rate">
-             <item>
+              <property name="currentText">
+               <string>9600</string>
+              </property>
+              <item>
                <property name="text">
                 <string>1200</string>
                </property>
@@ -620,12 +623,12 @@
               </item>
               <item>
                <property name="text">
-                <string>Mark</string>
+                <string>Space</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Space</string>
+                <string>Mark</string>
                </property>
               </item>
              </widget>
@@ -781,7 +784,7 @@
               </item>
               <item>
                <property name="text">
-                <string>CR+LF</string>
+                <string>CRLF</string>
                </property>
               </item>
              </widget>
