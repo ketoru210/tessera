@@ -151,7 +151,7 @@ void MainWindow::on_connect_clicked()
         else
         {
             ui->connect_button->setChecked(false);
-            log_event(QStringLiteral("Open failed"), LogLevel::Error);
+            log_event(QStringLiteral("Open failed: %1").arg(serial_.port_name()), LogLevel::Error);
         }
     }
     else
