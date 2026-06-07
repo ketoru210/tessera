@@ -3,9 +3,8 @@
 qt_add_executable(tessera
     WIN32 MACOSX_BUNDLE
     main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
+    mainwindow.cpp mainwindow.h mainwindow.ui
+    portpopup.cpp  portpopup.h  portpopup.ui
 )
 
 target_link_libraries(tessera

@@ -10,6 +10,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # core/CMakeLists (it links only Core/SerialPort), not by where find_package lives.
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core SerialPort Widgets)
 
+
 # Qt-wide setup: enable automatic moc/uic/rcc, set the C++ standard, etc.
 qt_standard_project_setup()
 

@@ -1,12 +1,7 @@
 #include <QTime>
-#include <qhashfunctions.h>
-#include <qlist.h>
-#include <qstatusbar.h>
-#include <qstringview.h>
-#include <qtextcursor.h>
-#include <qvariant.h>
 
 #include "mainwindow.h"
+#include "portpopup.h"
 #include "serialport.h"
 #include "ui_mainwindow.h"
 #include "core.h"
@@ -77,8 +72,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui->line_ending->setItemData(2, "\n");    // LF
     ui->line_ending->setItemData(3, "\r\n");  // CRLF
 
-    selected_port_name_ = "COM5";
-    ui->port_button->setText(selected_port_name_);
+    port_popup_ = new PortPopup(this);
+    connect(ui->port_button, &QPushButton::clicked,
+            this, [this] {
+                port_popup_->populate();
+                port_popup_->move(ui->port_button->mapToGlobal(QPoint(0, ui->port_button->height())));
+                port_popup_->show();
+            });
+    connect(port_popup_, &PortPopup::port_selected,
+            this, [this](const QString& name) {
+                selected_port_name_ = name;
+                ui->port_button->setText(name);
+                ui->port_button->setProperty("selected", true);
+                ui->port_button->style()->polish(ui->port_button);
+            });
 }
 
 MainWindow::~MainWindow()
@@ -97,6 +104,9 @@ void MainWindow::on_connect_clicked()
 
         if (connection_ok)
         {
+            // enable send button
+            ui->send_button->setEnabled(true);
+            
             // change connect button text and status
             ui->connect_button->setText(QStringLiteral("Disconnect"));
             ui->connect_button->setChecked(true);
@@ -119,6 +129,8 @@ void MainWindow::on_connect_clicked()
     {
         serial_.close();
         
+        ui->send_button->setEnabled(false);
+
         ui->connect_button->setText(QStringLiteral("Connect"));
         ui->connect_button->setChecked(false);
         

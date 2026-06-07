@@ -6,6 +6,7 @@
 #include <qserialportinfo.h>
 #include <qstringview.h>
 
+#include "portpopup.h"
 #include "serialport.h"
 #include "ui_mainwindow.h"
 
@@ -26,11 +27,12 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    tessera::core::SerialPort serial_;
+    PortPopup *port_popup_;
 
     // ASCII / HEX is a pure UI presentation choice — core never sees it (see DEVELOPMENT.md §10).
     enum class TextMode { Ascii, Hex };
 
-    tessera::core::SerialPort serial_;
     QString selected_port_name_;
     qint32                   selected_baud()         const { return ui->baud_rate->currentData().toInt(); }
     QSerialPort::DataBits    selected_data_bits()    const { return ui->data_bits->currentData().value<QSerialPort::DataBits>(); }
