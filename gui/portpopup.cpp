@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "portpopup.h"
 #include "portinfo.h"
 #include "ui_portpopup.h"
@@ -19,7 +21,10 @@ PortPopup::PortPopup(QWidget* parent) : QWidget(parent)
 
 void PortPopup::populate()
 {
-    const auto ports = tessera::core::portinfo::scan_ports();
+    auto ports = tessera::core::portinfo::scan_ports();
+    std::sort(ports.begin(), ports.end(),
+              [](const PortInfo& a, const PortInfo& b) { return a.name_ < b.name_; }
+    );
 
     ui.com_list->clear();
     for (const auto& p : ports)
