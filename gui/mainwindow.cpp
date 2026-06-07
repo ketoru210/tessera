@@ -130,13 +130,21 @@ void MainWindow::on_connect_clicked()
             ui->connect_button->setText(QStringLiteral("Disconnect"));
             ui->connect_button->setChecked(true);
 
+            // disable options in serial configuration
+            ui->port_button->setEnabled(false);
+            ui->baud_rate->setEnabled(false);
+            ui->data_bits->setEnabled(false);
+            ui->stop_bits->setEnabled(false);
+            ui->parity->setEnabled(false);
+            ui->flow_control->setEnabled(false);
+
             // change connection status (at bottom inforamtion area) 
-            ui->conn_dot->setText(QStringLiteral("● Connected: %1").arg(selected_port_name_));
+            ui->conn_dot->setText(QStringLiteral("● Connected: %1").arg(serial_.port_name()));
             ui->conn_dot->setProperty("off", false);
             ui->conn_dot->style()->polish(ui->conn_dot);  // reload style
             
             // output to EVENT LOG area
-            log_event(QStringLiteral("Opened: %1").arg(selected_port_name_), LogLevel::Success);
+            log_event(QStringLiteral("Opened: %1").arg(serial_.port_name()), LogLevel::Success);
         }
         else
         {
@@ -152,12 +160,19 @@ void MainWindow::on_connect_clicked()
 
         ui->connect_button->setText(QStringLiteral("Connect"));
         ui->connect_button->setChecked(false);
+
+        ui->port_button->setEnabled(true);
+        ui->baud_rate->setEnabled(true);
+        ui->data_bits->setEnabled(true);
+        ui->stop_bits->setEnabled(true);
+        ui->parity->setEnabled(true);
+        ui->flow_control->setEnabled(true);
         
         ui->conn_dot->setText(QStringLiteral("○ DISCONNECTED"));
         ui->conn_dot->setProperty("off", true);
         ui->conn_dot->style()->polish(ui->conn_dot);  // reload style
 
-        log_event(QStringLiteral("Closed: %1").arg(selected_port_name_), LogLevel::Normal);
+        log_event(QStringLiteral("Closed: %1").arg(serial_.port_name()), LogLevel::Normal);
     }
 }
 

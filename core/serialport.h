@@ -19,9 +19,10 @@ public:
         }
 
     // getters
-    bool is_open() const { return port_.isOpen(); }
+    bool is_open()       const { return port_.isOpen(); }
     qint64 read_count()  const { return read_count_;  }
     qint64 write_count() const { return write_count_; }
+    QString port_name()  const { return port_.portName(); }
 
     // methods
     bool open(const QString& name, qint32 baud_rate, 
