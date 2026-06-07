@@ -492,6 +492,21 @@
             </item>
             <item row="1" column="1">
              <widget class="QComboBox" name="baud_rate">
+             <item>
+               <property name="text">
+                <string>1200</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>2400</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>4800</string>
+               </property>
+              </item>
               <item>
                <property name="text">
                 <string>9600</string>
