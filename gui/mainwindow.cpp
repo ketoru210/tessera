@@ -1,4 +1,5 @@
 #include <QTime>
+#include <QScreen>
 
 #include "mainwindow.h"
 #include "portpopup.h"
@@ -76,7 +77,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->port_button, &QPushButton::clicked,
             this, [this] {
                 port_popup_->populate();
-                port_popup_->move(ui->port_button->mapToGlobal(QPoint(0, ui->port_button->height())));
+                port_popup_->adjustSize();   // settle size before positioning
+
+                const QRect screen = ui->port_button->screen()->availableGeometry();
+                const QSize sz     = port_popup_->size();
+                const QPoint btn   = ui->port_button->mapToGlobal(QPoint(0, 0));
+
+                // Right-align the popup to the button and drop below it (§9).
+                int x = btn.x() + ui->port_button->width() - sz.width();
+                int y = btn.y() + ui->port_button->height();
+
+                // Flip above the button if there isn't room below.
+                if (y + sz.height() > screen.bottom())
+                    y = btn.y() - sz.height();
+
+                // Clamp into the screen so the popup never leaves it.
+                x = qBound(screen.left(), x, screen.right()  - sz.width());
+                y = qBound(screen.top(),  y, screen.bottom() - sz.height());
+
+                port_popup_->move(x, y);
                 port_popup_->show();
             });
     connect(port_popup_, &PortPopup::port_selected,

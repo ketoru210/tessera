@@ -77,10 +77,10 @@
      </layout>
     </widget>
    </item>
-   <!-- ==== Body: detail (left) + list (right) ==== -->
+   <!-- ==== Body: list (left) + detail (right) ==== -->
    <item>
     <widget class="QWidget" name="com_body" native="true">
-     <layout class="QHBoxLayout" name="comBodyLayout" stretch="1,0">
+     <layout class="QHBoxLayout" name="comBodyLayout" stretch="0,1">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -96,7 +96,30 @@
       <property name="bottomMargin">
        <number>0</number>
       </property>
-      <!-- detail panel -->
+      <!-- port list (left) -->
+      <item>
+       <widget class="QListWidget" name="com_list">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>200</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <!-- detail panel (right) -->
       <item>
        <widget class="QWidget" name="com_detail" native="true">
         <layout class="QVBoxLayout" name="comDetailLayout">
@@ -244,23 +267,6 @@
           </spacer>
          </item>
         </layout>
-       </widget>
-      </item>
-      <!-- port list -->
-      <item>
-       <widget class="QListWidget" name="com_list">
-        <property name="minimumSize">
-         <size>
-          <width>200</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>200</width>
-          <height>16777215</height>
-         </size>
-        </property>
        </widget>
       </item>
      </layout>
