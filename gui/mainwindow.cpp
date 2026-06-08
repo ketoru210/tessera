@@ -2,6 +2,8 @@
 #include <QDateTime>
 #include <QTimer>
 #include <QScreen>
+#include <QTextCursor>
+#include <QScrollBar>
 
 #include "mainwindow.h"
 #include "portpopup.h"
@@ -217,11 +219,18 @@ void MainWindow::handle_data_received(const QByteArray& bytes)
         text.remove('\r');
     }
     else text = QString::fromLatin1(bytes.toHex(' ') + ' ');
-        
-    // render message to receive area
-    ui->receive_area->moveCursor(QTextCursor::End);
-    ui->receive_area->insertPlainText(text);
-    ui->receive_area->moveCursor(QTextCursor::End);
+
+    // append at document end without dragging the viewport
+    QTextCursor cur(ui->receive_area->document());
+    cur.movePosition(QTextCursor::End);
+    cur.insertText(text);
+
+    // follow to the bottom only when AUTO is on; otherwise stay where the user scrolled
+    if (ui->autoscroll_toggle->isChecked())
+    {
+        auto* sb = ui->receive_area->verticalScrollBar();
+        sb->setValue(sb->maximum());
+    }
 
     // update RX count
     ui->status_rx->setText(QStringLiteral("RX %1 B").arg(serial_.read_count()));
