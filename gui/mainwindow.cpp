@@ -215,6 +215,8 @@ void MainWindow::on_connect_clicked()
 void MainWindow::do_send()
 {
     const QString text = ui->send_area->toPlainText();
+    if (text.isEmpty()) return;   // nothing to send; also stops repeat from spamming empties
+
     const QString line_ending = ui->line_ending->currentData().toString();
 
     // convert message into bytes (QByteArray)
