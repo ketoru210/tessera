@@ -13,6 +13,12 @@ PortPopup::PortPopup(QWidget* parent) : QWidget(parent)
     ui.setupUi(this);
     setWindowFlags(Qt::Popup);
 
+    // Plain QWidget containers ignore QSS background/border unless told to paint
+    // a styled background. The popup shell and its head/foot bars need it.
+    setAttribute(Qt::WA_StyledBackground, true);
+    ui.com_head->setAttribute(Qt::WA_StyledBackground, true);
+    ui.com_foot->setAttribute(Qt::WA_StyledBackground, true);
+
     connect(ui.reload_button, &QPushButton::clicked,
             this, &PortPopup::populate);
     connect(ui.select_button, &QPushButton::clicked,

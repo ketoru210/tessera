@@ -1,0 +1,23 @@
+{
+  "name": "Dark - Blue",
+  "colors": {
+    "bg-base":       "#081B33",
+    "bg-surface":    "#0E2747",
+    "bg-elevated":   "#163358",
+    "border":        "#244766",
+    "border-strong": "#365C80",
+
+    "accent":        "#6FA6FF",
+    "accent-hover":  "#8CBBFF",
+    "accent-press":  "#5189E0",
+    "on-accent":     "#061427",
+
+    "text-pri":      "#E3F9FD",
+    "text-sec":      "#9FB8CC",
+    "text-dis":      "#5E7790",
+
+    "success":       "#4FD08A",
+    "warn":          "#E6C34A",
+    "error":         "#FF7A66"
+  }
+}

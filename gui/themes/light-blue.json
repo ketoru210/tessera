@@ -1,0 +1,23 @@
+{
+  "name": "Light - Blue",
+  "colors": {
+    "bg-base":       "#E3F9FD",
+    "bg-surface":    "#F2FCFE",
+    "bg-elevated":   "#FFFFFF",
+    "border":        "#C2DEE8",
+    "border-strong": "#9DC2D2",
+
+    "accent":        "#0B3289",
+    "accent-hover":  "#14409E",
+    "accent-press":  "#082668",
+    "on-accent":     "#E3F9FD",
+
+    "text-pri":      "#0E1F33",
+    "text-sec":      "#4A5A6E",
+    "text-dis":      "#8FA3B3",
+
+    "success":       "#137A43",
+    "warn":          "#A85A00",
+    "error":         "#C0341F"
+  }
+}

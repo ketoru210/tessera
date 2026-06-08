@@ -1,0 +1,12 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/styles">
+    <file alias="theme.qss">styles/theme.qss</file>
+  </qresource>
+  <qresource prefix="/themes">
+    <file alias="dark-gold.json">themes/dark-gold.json</file>
+    <file alias="light-gold.json">themes/light-gold.json</file>
+    <file alias="dark-blue.json">themes/dark-blue.json</file>
+    <file alias="light-blue.json">themes/light-blue.json</file>
+  </qresource>
+</RCC>

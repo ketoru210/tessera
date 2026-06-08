@@ -1,0 +1,23 @@
+{
+  "name": "Light - Gold",
+  "colors": {
+    "bg-base":       "#F5F0E8",
+    "bg-surface":    "#FBF8F2",
+    "bg-elevated":   "#FFFFFF",
+    "border":        "#E0D6C6",
+    "border-strong": "#C9BBA4",
+
+    "accent":        "#9A5F22",
+    "accent-hover":  "#B5732A",
+    "accent-press":  "#7E4D1A",
+    "on-accent":     "#FFFFFF",
+
+    "text-pri":      "#2A2118",
+    "text-sec":      "#6E6151",
+    "text-dis":      "#A89B88",
+
+    "success":       "#2E7D4F",
+    "warn":          "#B45309",
+    "error":         "#B5402A"
+  }
+}

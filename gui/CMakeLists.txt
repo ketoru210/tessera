@@ -5,6 +5,8 @@ qt_add_executable(tessera
     main.cpp
     mainwindow.cpp mainwindow.h mainwindow.ui
     portpopup.cpp  portpopup.h  portpopup.ui
+    thememanager.cpp thememanager.h
+    themes.qrc
 )
 
 target_link_libraries(tessera
@@ -12,6 +14,13 @@ target_link_libraries(tessera
         core
         Qt::Widgets
 )
+
+# In-tree source dirs: let ThemeManager hot-reload the template + palettes during
+# development. Release builds fall back to the ":/styles" and ":/themes" resources
+# bundled via themes.qrc.
+target_compile_definitions(tessera PRIVATE
+    STYLE_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/styles"
+    THEME_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/themes")
 
 install(TARGETS tessera
     BUNDLE  DESTINATION .

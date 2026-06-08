@@ -1,0 +1,23 @@
+{
+  "name": "Dark - Gold",
+  "colors": {
+    "bg-base":       "#0D131A",
+    "bg-surface":    "#151D27",
+    "bg-elevated":   "#1E2935",
+    "border":        "#2A3744",
+    "border-strong": "#3A4A5A",
+
+    "accent":        "#F8B37F",
+    "accent-hover":  "#FAC399",
+    "accent-press":  "#E09A63",
+    "on-accent":     "#1A1206",
+
+    "text-pri":      "#EAEEF2",
+    "text-sec":      "#9AA7B4",
+    "text-dis":      "#5A6770",
+
+    "success":       "#5BC98A",
+    "warn":          "#E6C34A",
+    "error":         "#E5705F"
+  }
+}

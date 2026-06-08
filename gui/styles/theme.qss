@@ -1,0 +1,347 @@
+/* ============================================================================
+   Tessera QSS template.
+
+   This file contains ZERO literal colors. Every color is a @token@ placeholder
+   that ThemeManager substitutes at load time from a per-theme palette
+   (themes/<name>.json). One template -> many themes: to add a theme, drop in a
+   new .json palette; never edit colors here.
+
+   Tokens (must match the keys in the "colors" object of every .json palette):
+     bg-base bg-surface bg-elevated border border-strong
+     accent accent-hover accent-press on-accent
+     text-pri text-sec text-dis  success warn error
+
+   QSS caveats (cannot be expressed here, handled in C++ if needed):
+     - no transitions/animations: state swaps are instant.
+     - no letter-spacing / text-transform: titles are pre-uppercased in the .ui.
+     - dropdown/spin arrows drawn with the border-triangle trick (no image asset).
+   ============================================================================ */
+
+/* ---- base: window background + app-wide text/font ----------------------- */
+/* Only the top-level surfaces get a background so we never blanket-paint the
+   internal sub-widgets of complex controls (combo popups, spinboxes, ...). */
+QMainWindow,
+#centralwidget {
+    background-color: @bg-base@;
+}
+QWidget {
+    color: @text-pri@;
+    font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+    font-size: 12px;
+}
+QToolTip {
+    background-color: @bg-elevated@;
+    color: @text-pri@;
+    border: 1px solid @border-strong@;
+    padding: 4px 6px;
+}
+
+/* ---- group panels (the bordered cards) ---------------------------------- */
+#receive_group,
+#send_group,
+#serial_config_group,
+#other_config_group,
+#event_log_group {
+    background-color: @bg-surface@;
+    border: 1px solid @border-strong@;
+    border-radius: 3px;
+}
+
+/* ---- labels ------------------------------------------------------------- */
+/* Default label = secondary text (field labels, detail keys, status counters). */
+QLabel {
+    color: @text-sec@;
+    background: transparent;
+    font-size: 12px;
+}
+/* Group / detail titles = accent. Strings are already UPPERCASE in the .ui. */
+#receive_title,
+#send_title,
+#serial_config_title,
+#other_config_title,
+#event_log_title,
+#detail_title {
+    color: @accent@;
+    font-weight: 600;
+}
+/* Detail values = primary text, monospaced for alignment. */
+#detail_v_port, #detail_v_desc, #detail_v_mfr, #detail_v_serial,
+#detail_v_location, #detail_v_vid, #detail_v_pid {
+    color: @text-pri@;
+    font-family: "Consolas", monospace;
+}
+/* Popup header count line. */
+#com_count {
+    color: @text-pri@;
+    font-weight: 600;
+}
+
+/* ---- status bar --------------------------------------------------------- */
+#status_info {
+    background-color: @bg-surface@;
+    border: 1px solid @border-strong@;
+    border-radius: 3px;
+}
+#status_time, #status_tx, #status_rx, #conn_dot {
+    font-family: "Consolas", monospace;
+}
+/* Connection dot: success when connected, muted when the [off] property is set. */
+#conn_dot           { color: @success@; }
+#conn_dot[off="true"] { color: @text-dis@; }
+
+/* ---- text areas (receive / send) and the event log ---------------------- */
+#receive_area,
+#send_area {
+    background-color: @bg-base@;
+    border: 1px solid @border@;
+    border-radius: 2px;
+    color: @text-pri@;
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 13px;
+    padding: 6px;
+    selection-background-color: @accent@;
+    selection-color: @on-accent@;
+}
+#event_log {
+    background-color: @bg-base@;
+    border: 1px solid @border@;
+    border-radius: 2px;
+    color: @text-sec@;
+    font-family: "Consolas", monospace;
+    font-size: 12px;
+    padding: 6px;
+}
+
+/* ---- buttons: default --------------------------------------------------- */
+QPushButton {
+    background-color: @bg-elevated@;
+    color: @text-pri@;
+    border: 1px solid @border-strong@;
+    border-radius: 2px;
+    padding: 6px 14px;
+    font-size: 12px;
+}
+QPushButton:hover    { border-color: @accent@; }
+QPushButton:pressed  { background-color: @bg-surface@; }
+QPushButton:disabled {
+    color: @text-dis@;
+    background-color: @bg-surface@;
+    border-color: @border@;
+}
+
+/* ---- buttons: primary (Send, Select) — property primary="true" ---------- */
+QPushButton[primary="true"] {
+    background-color: @accent@;
+    color: @on-accent@;
+    border-color: @accent@;
+    font-weight: 600;
+}
+QPushButton[primary="true"]:hover    { background-color: @accent-hover@; }
+QPushButton[primary="true"]:pressed  { background-color: @accent-press@; }
+QPushButton[primary="true"]:disabled {
+    background-color: @bg-surface@;
+    color: @text-dis@;
+    border-color: @border@;
+}
+
+/* ---- Connect button: filled = connect, outline (:checked) = connected ---- */
+#connect_button {
+    background-color: @accent@;
+    color: @on-accent@;
+    border-color: @accent@;
+    font-weight: 600;
+    padding: 8px;
+}
+#connect_button:hover            { background-color: @accent-hover@; }
+#connect_button:checked          { background-color: transparent; color: @accent@; border-color: @accent@; }
+#connect_button:checked:hover    { background-color: @bg-elevated@; }
+#connect_button:disabled {
+    background-color: @bg-surface@;
+    color: @text-dis@;
+    border-color: @border@;
+}
+
+/* ---- Port button: muted until a port is chosen (property selected) ------- */
+#port_button {
+    background-color: @bg-elevated@;
+    color: @text-dis@;
+    border: 1px solid @border@;
+    border-radius: 2px;
+    padding: 4px 10px;
+    text-align: left;
+    font-weight: normal;
+}
+#port_button:hover               { border-color: @accent@; }
+#port_button[selected="true"]    { color: @text-pri@; }
+
+/* ---- repeat control frame ----------------------------------------------- */
+#repeat_ctl {
+    background-color: @bg-surface@;
+    border: 1px solid @border-strong@;
+    border-radius: 2px;
+}
+#repeat_ctl:hover { border-color: @accent@; }
+
+/* ---- toggle tool buttons (TS / AUTO) ------------------------------------ */
+QToolButton {
+    background-color: @bg-elevated@;
+    color: @text-sec@;
+    border: 1px solid @border@;
+    border-radius: 2px;
+    padding: 3px 8px;
+    font-family: "Consolas", monospace;
+    font-size: 11px;
+}
+QToolButton:hover   { border-color: @accent@; }
+QToolButton:checked {
+    color: @accent@;
+    border-color: @accent@;
+    background-color: @bg-elevated@;
+}
+/* Settings gear: square surface tile, not a toggle. */
+#setting_button {
+    background-color: @bg-surface@;
+    border: 1px solid @border-strong@;
+    border-radius: 3px;
+    color: @text-pri@;
+    font-size: 16px;
+    padding: 4px 12px;
+}
+#setting_button:hover { color: @accent@; border-color: @accent@; }
+
+/* ---- combo boxes -------------------------------------------------------- */
+QComboBox {
+    background-color: @bg-elevated@;
+    color: @text-pri@;
+    border: 1px solid @border@;
+    border-radius: 2px;
+    padding: 2px 8px;
+    min-height: 22px;
+}
+QComboBox:hover    { border-color: @accent@; }
+QComboBox:disabled { color: @text-dis@; background-color: @bg-surface@; }
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: center right;
+    width: 18px;
+    border: none;
+}
+/* Caret via the border-triangle trick (swap for image: url(...) if preferred). */
+QComboBox::down-arrow {
+    image: none;
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid @text-sec@;
+    margin-right: 6px;
+}
+QComboBox QAbstractItemView {
+    background-color: @bg-elevated@;
+    border: 1px solid @border-strong@;
+    color: @text-pri@;
+    selection-background-color: @accent@;
+    selection-color: @on-accent@;
+    outline: none;
+}
+
+/* ---- spin box (repeat interval) ----------------------------------------- */
+QSpinBox {
+    background-color: @bg-elevated@;
+    color: @text-pri@;
+    border: 1px solid @border@;
+    border-radius: 2px;
+    padding: 2px 6px;
+    font-family: "Consolas", monospace;
+}
+QSpinBox:disabled { color: @text-dis@; background-color: @bg-surface@; }
+QSpinBox::up-button, QSpinBox::down-button {
+    background-color: @bg-surface@;
+    border-left: 1px solid @border@;
+    width: 14px;
+}
+QSpinBox::up-arrow {
+    image: none; width: 0; height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-bottom: 4px solid @text-sec@;
+}
+QSpinBox::down-arrow {
+    image: none; width: 0; height: 0;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 4px solid @text-sec@;
+}
+
+/* ---- scrollbars (slim, used by text areas, list, scroll area) ----------- */
+QScrollBar:vertical {
+    background: @bg-base@;
+    width: 10px;
+    margin: 0;
+}
+QScrollBar::handle:vertical {
+    background: @border-strong@;
+    border-radius: 4px;
+    min-height: 24px;
+}
+QScrollBar::handle:vertical:hover { background: @text-dis@; }
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0; }
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: none; }
+QScrollBar:horizontal {
+    background: @bg-base@;
+    height: 10px;
+    margin: 0;
+}
+QScrollBar::handle:horizontal {
+    background: @border-strong@;
+    border-radius: 4px;
+    min-width: 24px;
+}
+QScrollBar::handle:horizontal:hover { background: @text-dis@; }
+QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal { width: 0; }
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { background: none; }
+
+/* ============================================================================
+   COM port popup (PortPopup, opened as a Qt::Popup)
+   ============================================================================ */
+/* Root needs WA_StyledBackground (set in PortPopup ctor) for bg + border. */
+#PortPopup {
+    background-color: @bg-surface@;
+    border: 1px solid @border-strong@;
+    border-top: 2px solid @accent@;
+    border-radius: 3px;
+}
+/* Head / foot are plain QWidget containers — also WA_StyledBackground in ctor. */
+#com_head {
+    background-color: @bg-elevated@;
+    border-bottom: 1px solid @border@;
+}
+#com_foot {
+    background-color: @bg-elevated@;
+    border-top: 1px solid @border@;
+}
+/* Port list: divider on its left, accent bar on the selected row (reserved
+   width via transparent border so the text never shifts). */
+#com_list {
+    background-color: @bg-surface@;
+    border: none;
+    border-left: 1px solid @border@;
+    outline: none;
+}
+#com_list::item {
+    padding: 8px 12px;
+    border-bottom: 1px solid @border@;
+    border-left: 3px solid transparent;
+    color: @text-pri@;
+}
+#com_list::item:hover    { background-color: @bg-elevated@; }
+#com_list::item:selected {
+    background-color: @bg-elevated@;
+    border-left: 3px solid @accent@;
+    color: @text-pri@;
+}
+/* Detail scroll area stays transparent over the popup surface. */
+#detail_scroll,
+#detail_scroll_contents {
+    background: transparent;
+    border: none;
+}
