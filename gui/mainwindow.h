@@ -50,7 +50,8 @@ private:
 
 private slots:
     void on_connect_clicked();
-    void do_send();
+    void on_send_clicked();   // Send button: sends once, then arms repeat if it is checked
+    bool do_send();           // performs one send; returns whether anything was actually sent
     void handle_data_received(const QByteArray& bytes);
 
 private:
