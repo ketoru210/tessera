@@ -7,6 +7,8 @@
 #include "portinfo.h"
 #include "ui_portpopup.h"
 
+class QResizeEvent;
+
 
 class PortPopup : public QWidget
 {
@@ -20,6 +22,10 @@ public:
 
 signals:
     void port_selected(const QString& name);
+
+protected:
+    // keep the popup fully on-screen when its size changes (e.g. detail panel fills)
+    void resizeEvent(QResizeEvent* event) override;
 
 private slots:
     void on_select_clicked();

@@ -1,5 +1,8 @@
 #include <algorithm>
 
+#include <QResizeEvent>
+#include <QScreen>
+
 #include "portpopup.h"
 #include "portinfo.h"
 #include "ui_portpopup.h"
@@ -48,6 +51,20 @@ void PortPopup::on_select_clicked()
     if (!item) return;
     emit port_selected(ports_[item->data(Qt::UserRole).toInt()].name_);
     hide();
+}
+
+void PortPopup::resizeEvent(QResizeEvent* event)
+{
+    QWidget::resizeEvent(event);
+
+    const QScreen* scr = screen();
+    if (!scr) return;
+
+    // re-clamp our top-left so the (possibly grown) popup never spills off the screen
+    const QRect avail = scr->availableGeometry();
+    const int nx = qBound(avail.left(), x(), avail.right()  - width());
+    const int ny = qBound(avail.top(),  y(), avail.bottom() - height());
+    if (nx != x() || ny != y()) move(nx, ny);
 }
 
 void PortPopup::on_current_changed(QListWidgetItem* current)
