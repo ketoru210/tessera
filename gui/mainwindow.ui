@@ -131,6 +131,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="clear_receive">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Clear RA</string>
               </property>
@@ -278,6 +281,9 @@
             </item>
             <item>
              <widget class="QPushButton" name="clear_send">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="text">
                <string>Clear SA</string>
               </property>

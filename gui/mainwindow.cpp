@@ -27,12 +27,19 @@ MainWindow::MainWindow(QWidget *parent)
     // to send message (single shot)
     connect(ui->send_button, &QPushButton::clicked,
             this, &MainWindow::do_send);
+    // keep Send / repeat enabled-state in sync with the send-area content
+    connect(ui->send_area, &QPlainTextEdit::textChanged,
+            this, &MainWindow::refresh_send_controls);
     // to render message
     connect(&serial_, &tessera::core::SerialPort::data_received,
             this, &MainWindow::handle_data_received);
     // to clear receive area
     connect(ui->clear_receive, &QPushButton::clicked,
             ui->receive_area, &QPlainTextEdit::clear);
+    // disable Clear RA when the receive area is empty
+    connect(ui->receive_area, &QPlainTextEdit::textChanged, this, [this] {
+        ui->clear_receive->setEnabled(!ui->receive_area->toPlainText().isEmpty());
+    });
     // to clear send area
     connect(ui->clear_send, &QPushButton::clicked,
             ui->send_area, &QPlainTextEdit::clear);
@@ -146,10 +153,8 @@ void MainWindow::on_connect_clicked()
 
         if (connection_ok)
         {
-            // enable sending and the repeat controls (all need an open port)
-            ui->send_button->setEnabled(true);
-            ui->repeat_button->setEnabled(true);
-            ui->repeat_interval->setEnabled(true);
+            // (de)activate Send / repeat controls from connection + send-area content
+            refresh_send_controls();
 
             // change connect button text and status
             ui->connect_button->setText(QStringLiteral("Disconnect"));
@@ -181,12 +186,9 @@ void MainWindow::on_connect_clicked()
     {
         serial_.close();
 
-        // stop any running repeat and disable its controls
+        // stop any running repeat; stop_repeat() refreshes and, with the port now
+        // closed, the Send / repeat controls fall back to disabled
         stop_repeat();
-        ui->repeat_button->setEnabled(false);
-        ui->repeat_interval->setEnabled(false);
-
-        ui->send_button->setEnabled(false);
 
         ui->connect_button->setText(QStringLiteral("Connect"));
         ui->connect_button->setChecked(false);
@@ -219,16 +221,34 @@ void MainWindow::start_repeat()
 {
     repeat_timer_->start(ui->repeat_interval->value());
     ui->repeat_button->setText(QStringLiteral("Stop"));
-    ui->repeat_interval->setEnabled(false);   // lock the interval while running
-    ui->send_button->setEnabled(false);       // no single send during a repeat
+    refresh_send_controls();
 }
 
 void MainWindow::stop_repeat()
 {
     repeat_timer_->stop();
     ui->repeat_button->setText(QStringLiteral("Start"));
-    ui->repeat_interval->setEnabled(true);
-    ui->send_button->setEnabled(true);
+    refresh_send_controls();
+}
+
+void MainWindow::refresh_send_controls()
+{
+    const bool connected = serial_.is_open();
+    const bool repeating = repeat_timer_->isActive();
+    const bool has_text  = !ui->send_area->toPlainText().isEmpty();
+
+    // Send: single shot — needs a port, some text, and no repeat in progress
+    ui->send_button->setEnabled(connected && has_text && !repeating);
+
+    // Start/Stop: while repeating it is the Stop button and must stay clickable;
+    // while idle it needs a port and some text to start
+    ui->repeat_button->setEnabled(repeating || (connected && has_text));
+
+    // interval is editable only while connected and not running
+    ui->repeat_interval->setEnabled(connected && !repeating);
+
+    // Clear SA: only when there is text to clear, and never mid-repeat (its content is in use)
+    ui->clear_send->setEnabled(has_text && !repeating);
 }
 
 bool MainWindow::do_send()

@@ -71,5 +71,8 @@ private:
     // enter / leave the repeating state, flipping the Start/Stop button and lockouts
     void start_repeat();
     void stop_repeat();
+
+    // recompute Send / repeat enabled-state from connection, content and run state
+    void refresh_send_controls();
 };
 #endif // MAINWINDOW_H
