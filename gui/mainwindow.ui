@@ -226,16 +226,6 @@
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="repeat_enable">
-                 <property name="enabled">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </widget>
-               </item>
-               <item>
                 <widget class="QSpinBox" name="repeat_interval">
                  <property name="enabled">
                   <bool>false</bool>
@@ -257,6 +247,16 @@
                  </property>
                  <property name="value">
                   <number>1000</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="repeat_button">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string>Start</string>
                  </property>
                 </widget>
                </item>

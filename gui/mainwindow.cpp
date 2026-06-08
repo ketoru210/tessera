@@ -24,9 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
     // to connect port
     connect(ui->connect_button, &QPushButton::clicked, 
             this, &MainWindow::on_connect_clicked);
-    // to send message
+    // to send message (single shot)
     connect(ui->send_button, &QPushButton::clicked,
-            this, &MainWindow::on_send_clicked);
+            this, &MainWindow::do_send);
     // to render message
     connect(&serial_, &tessera::core::SerialPort::data_received,
             this, &MainWindow::handle_data_received);
@@ -122,18 +122,12 @@ MainWindow::MainWindow(QWidget *parent)
     // fire once now so it doesn't sit on the placeholder for the first second
     ui->status_time->setText(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
 
-    // repeat: a timer that re-runs do_send() on a fixed interval.
-    // It is armed by the Send button (see on_send_clicked), not by ticking the box,
-    // so it never fires mid-typing before the user has actually pressed Send.
+    // repeat: a timer that re-runs do_send() on a fixed interval, driven by its own
+    // Start/Stop button. Send stays a pure single-shot; the two never overlap.
     repeat_timer_ = new QTimer(this);
     connect(repeat_timer_, &QTimer::timeout, this, &MainWindow::do_send);
-    connect(ui->repeat_enable, &QCheckBox::toggled, this, [this](bool on) {
-        ui->repeat_interval->setEnabled(on);   // the interval spinbox follows the checkbox
-        if (!on) repeat_timer_->stop();        // unchecking cancels an in-progress repeat
-    });
-    connect(ui->repeat_interval, &QSpinBox::valueChanged, this, [this](int ms) {
-        if (repeat_timer_->isActive()) repeat_timer_->start(ms);   // apply a new interval live
-    });
+    connect(ui->repeat_button, &QPushButton::clicked,
+            this, &MainWindow::on_repeat_clicked);
 }
 
 MainWindow::~MainWindow()
@@ -152,9 +146,10 @@ void MainWindow::on_connect_clicked()
 
         if (connection_ok)
         {
-            // enable send button and the repeat switch (both need an open port)
+            // enable sending and the repeat controls (all need an open port)
             ui->send_button->setEnabled(true);
-            ui->repeat_enable->setEnabled(true);
+            ui->repeat_button->setEnabled(true);
+            ui->repeat_interval->setEnabled(true);
 
             // change connect button text and status
             ui->connect_button->setText(QStringLiteral("Disconnect"));
@@ -186,10 +181,10 @@ void MainWindow::on_connect_clicked()
     {
         serial_.close();
 
-        // stop any running repeat, reset and disable its switch
-        repeat_timer_->stop();
-        ui->repeat_enable->setChecked(false);
-        ui->repeat_enable->setEnabled(false);
+        // stop any running repeat and disable its controls
+        stop_repeat();
+        ui->repeat_button->setEnabled(false);
+        ui->repeat_interval->setEnabled(false);
 
         ui->send_button->setEnabled(false);
 
@@ -211,13 +206,29 @@ void MainWindow::on_connect_clicked()
     }
 }
 
-void MainWindow::on_send_clicked()
+void MainWindow::on_repeat_clicked()
 {
-    if (!do_send()) return;   // nothing went out → don't arm repeat on an empty/failed send
+    if (repeat_timer_->isActive()) { stop_repeat(); return; }
 
-    // keep firing on the interval only if the user asked for repeat
-    if (ui->repeat_enable->isChecked())
-        repeat_timer_->start(ui->repeat_interval->value());
+    // send the first frame immediately; only enter repeat mode if it actually went out
+    if (!do_send()) return;
+    start_repeat();
+}
+
+void MainWindow::start_repeat()
+{
+    repeat_timer_->start(ui->repeat_interval->value());
+    ui->repeat_button->setText(QStringLiteral("Stop"));
+    ui->repeat_interval->setEnabled(false);   // lock the interval while running
+    ui->send_button->setEnabled(false);       // no single send during a repeat
+}
+
+void MainWindow::stop_repeat()
+{
+    repeat_timer_->stop();
+    ui->repeat_button->setText(QStringLiteral("Start"));
+    ui->repeat_interval->setEnabled(true);
+    ui->send_button->setEnabled(true);
 }
 
 bool MainWindow::do_send()

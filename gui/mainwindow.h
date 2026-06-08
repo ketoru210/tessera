@@ -50,8 +50,8 @@ private:
 
 private slots:
     void on_connect_clicked();
-    void on_send_clicked();   // Send button: sends once, then arms repeat if it is checked
-    bool do_send();           // performs one send; returns whether anything was actually sent
+    void on_repeat_clicked();   // Start/Stop button: toggles repeated sending
+    bool do_send();             // performs one send; returns whether anything was actually sent
     void handle_data_received(const QByteArray& bytes);
 
 private:
@@ -67,5 +67,9 @@ private:
 
     // prefixes a timestamp at the start of each line in the received text
     QString stamp_lines(const QString& in);
+
+    // enter / leave the repeating state, flipping the Start/Stop button and lockouts
+    void start_repeat();
+    void stop_repeat();
 };
 #endif // MAINWINDOW_H
