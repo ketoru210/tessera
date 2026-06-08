@@ -292,7 +292,11 @@
            </layout>
           </item>
           <item>
-           <widget class="QPlainTextEdit" name="send_area"/>
+           <widget class="QPlainTextEdit" name="send_area">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

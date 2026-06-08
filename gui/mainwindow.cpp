@@ -237,6 +237,10 @@ void MainWindow::refresh_send_controls()
     const bool repeating = repeat_timer_->isActive();
     const bool has_text  = !ui->send_area->toPlainText().isEmpty();
 
+    // the send area is editable only while connected and not repeating;
+    // read-only (rather than disabled) keeps its content legible and copyable
+    ui->send_area->setReadOnly(!(connected && !repeating));
+
     // Send: single shot — needs a port, some text, and no repeat in progress
     ui->send_button->setEnabled(connected && has_text && !repeating);
 
