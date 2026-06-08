@@ -34,6 +34,10 @@ private:
     enum class TextMode { Ascii, Hex };
 
     QString selected_port_name_;
+
+    // tracks whether the next received char begins a fresh line, so the timestamp
+    // is stamped once per real line regardless of how the byte stream is fragmented.
+    bool receive_at_line_start_ = true;
     qint32                   selected_baud()         const { return ui->baud_rate->currentData().toInt(); }
     QSerialPort::DataBits    selected_data_bits()    const { return ui->data_bits->currentData().value<QSerialPort::DataBits>(); }
     QSerialPort::StopBits    selected_stop_bits()    const { return ui->stop_bits->currentData().value<QSerialPort::StopBits>(); }
@@ -57,5 +61,8 @@ private:
     };
 
     void log_event(const QString& msg, LogLevel level = LogLevel::Normal);
+
+    // prefixes a timestamp at the start of each line in the received text
+    QString stamp_lines(const QString& in);
 };
 #endif // MAINWINDOW_H

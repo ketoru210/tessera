@@ -220,6 +220,9 @@ void MainWindow::handle_data_received(const QByteArray& bytes)
     }
     else text = QString::fromLatin1(bytes.toHex(' ') + ' ');
 
+    // prefix each line with an arrival timestamp when TS is on
+    if (ui->timestamp_toggle->isChecked()) text = stamp_lines(text);
+
     // append at document end without dragging the viewport
     QTextCursor cur(ui->receive_area->document());
     cur.movePosition(QTextCursor::End);
@@ -251,4 +254,17 @@ void MainWindow::log_event(const QString& msg, LogLevel level)
     ui->event_log->appendHtml(
         QStringLiteral("<span style='color:%1'>[%2] %3</span>").arg(color, ts, msg)
     );
+}
+
+QString MainWindow::stamp_lines(const QString& in)
+{
+    const QString ts = '[' + QTime::currentTime().toString("HH:mm:ss.zzz") + "] ";
+    QString out;
+    for (const QChar c : in)
+    {
+        if (receive_at_line_start_) { out += ts; receive_at_line_start_ = false; }
+        out += c;
+        if (c == '\n') receive_at_line_start_ = true;
+    }
+    return out;
 }
