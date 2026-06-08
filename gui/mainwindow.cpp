@@ -1,4 +1,6 @@
 #include <QTime>
+#include <QDateTime>
+#include <QTimer>
 #include <QScreen>
 
 #include "mainwindow.h"
@@ -107,6 +109,16 @@ MainWindow::MainWindow(QWidget *parent)
 
                 ui->connect_button->setEnabled(true);
             });
+
+    // status-bar wall clock, ticking once a second
+    auto* clock = new QTimer(this);
+    connect(clock, &QTimer::timeout, this, [this] {
+        ui->status_time->setText(
+            QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+    });
+    clock->start(1000);
+    // fire once now so it doesn't sit on the placeholder for the first second
+    ui->status_time->setText(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
 }
 
 MainWindow::~MainWindow()
@@ -117,7 +129,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_connect_clicked()
 {
-    if (!serial_.is_open())
+    if (!serial_.is_open())  // if serial is closed
     {
         bool connection_ok = serial_.open(selected_port_name_, selected_baud(), 
                                           selected_data_bits(), selected_stop_bits(),
@@ -154,7 +166,7 @@ void MainWindow::on_connect_clicked()
             log_event(QStringLiteral("Open failed: %1").arg(serial_.port_name()), LogLevel::Error);
         }
     }
-    else
+    else  // if serial is opened
     {
         serial_.close();
         
