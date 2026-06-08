@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
             this, &MainWindow::on_connect_clicked);
     // to send message
     connect(ui->send_button, &QPushButton::clicked,
-            this, &MainWindow::on_send_clicked);
+            this, &MainWindow::do_send);
     // to render message
     connect(&serial_, &tessera::core::SerialPort::data_received,
             this, &MainWindow::handle_data_received);
@@ -121,6 +121,18 @@ MainWindow::MainWindow(QWidget *parent)
     clock->start(1000);
     // fire once now so it doesn't sit on the placeholder for the first second
     ui->status_time->setText(QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+
+    // repeat: a timer that re-runs do_send() on a fixed interval
+    repeat_timer_ = new QTimer(this);
+    connect(repeat_timer_, &QTimer::timeout, this, &MainWindow::do_send);
+    connect(ui->repeat_enable, &QCheckBox::toggled, this, [this](bool on) {
+        ui->repeat_interval->setEnabled(on);   // the interval spinbox follows the checkbox
+        if (on && serial_.is_open()) repeat_timer_->start(ui->repeat_interval->value());
+        else                         repeat_timer_->stop();
+    });
+    connect(ui->repeat_interval, &QSpinBox::valueChanged, this, [this](int ms) {
+        if (repeat_timer_->isActive()) repeat_timer_->start(ms);   // apply a new interval live
+    });
 }
 
 MainWindow::~MainWindow()
@@ -141,7 +153,11 @@ void MainWindow::on_connect_clicked()
         {
             // enable send button
             ui->send_button->setEnabled(true);
-            
+
+            // if Repeat was pre-armed before connecting, start it now
+            if (ui->repeat_enable->isChecked())
+                repeat_timer_->start(ui->repeat_interval->value());
+
             // change connect button text and status
             ui->connect_button->setText(QStringLiteral("Disconnect"));
             ui->connect_button->setChecked(true);
@@ -171,7 +187,11 @@ void MainWindow::on_connect_clicked()
     else  // if serial is opened
     {
         serial_.close();
-        
+
+        // stop any running repeat and reset its switch
+        repeat_timer_->stop();
+        ui->repeat_enable->setChecked(false);
+
         ui->send_button->setEnabled(false);
 
         ui->connect_button->setText(QStringLiteral("Connect"));
@@ -192,7 +212,7 @@ void MainWindow::on_connect_clicked()
     }
 }
 
-void MainWindow::on_send_clicked()
+void MainWindow::do_send()
 {
     const QString text = ui->send_area->toPlainText();
     const QString line_ending = ui->line_ending->currentData().toString();

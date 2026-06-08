@@ -15,6 +15,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
 }
+class QTimer;
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -29,6 +30,7 @@ private:
     Ui::MainWindow *ui;
     tessera::core::SerialPort serial_;
     PortPopup *port_popup_;
+    QTimer *repeat_timer_;   // drives repeated sends when Repeat is enabled
 
     // ASCII / HEX is a pure UI presentation choice — core never sees it (see DEVELOPMENT.md §10).
     enum class TextMode { Ascii, Hex };
@@ -48,7 +50,7 @@ private:
 
 private slots:
     void on_connect_clicked();
-    void on_send_clicked();
+    void do_send();
     void handle_data_received(const QByteArray& bytes);
 
 private:
