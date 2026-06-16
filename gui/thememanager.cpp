@@ -88,6 +88,18 @@ QStringList ThemeManager::available() const
     return out;
 }
 
+QString ThemeManager::display_name(const QString& theme_name) const
+{
+    const QString json = read_text(palette_path(theme_name));
+    if (!json.isEmpty())
+    {
+        const QJsonObject obj = QJsonDocument::fromJson(json.toUtf8()).object();
+        const QString name = obj.value(QStringLiteral("name")).toString();
+        if (!name.isEmpty()) return name;
+    }
+    return theme_name;   // fall back to the file basename
+}
+
 QString ThemeManager::build_qss(const QString& theme_name) const
 {
     QString       qss  = read_text(template_path());

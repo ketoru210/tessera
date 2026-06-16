@@ -18,18 +18,22 @@ class MainWindow;
 class QTimer;
 QT_END_NAMESPACE
 
+class ThemeManager;
+class SettingsDialog;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(ThemeManager *theme, QWidget *parent = nullptr);
     ~MainWindow() override;
 
 private:
     Ui::MainWindow *ui;
     tessera::core::SerialPort serial_;
     PortPopup *port_popup_;
+    SettingsDialog *settings_;
     QTimer *repeat_timer_;   // drives repeated sends when Repeat is enabled
 
     // ASCII / HEX is a pure UI presentation choice — core never sees it (see DEVELOPMENT.md §10).

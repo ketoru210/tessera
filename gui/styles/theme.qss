@@ -345,3 +345,34 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal { background: n
     background: transparent;
     border: none;
 }
+
+/* ============================================================================
+   Settings overlay (SettingsDialog — a centered floating panel)
+   ============================================================================ */
+/* Dim backdrop covering the whole window (WA_StyledBackground set in ctor). */
+#settings_overlay {
+    background-color: rgba(0, 0, 0, 140);
+}
+/* The centered card. */
+#settings_card {
+    background-color: @bg-surface@;
+    border: 1px solid @border-strong@;
+    border-top: 2px solid @accent@;
+    border-radius: 4px;
+    min-width: 320px;
+}
+#settings_title {
+    color: @accent@;
+    font-size: 14px;
+    font-weight: bold;
+}
+#settings_label { color: @text-sec@; }
+/* Close (✕): borderless glyph, accent on hover. */
+#settings_close {
+    background: transparent;
+    border: none;
+    color: @text-sec@;
+    font-size: 15px;
+    padding: 0 4px;
+}
+#settings_close:hover { color: @accent@; }

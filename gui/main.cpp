@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     ThemeManager theme;
     theme.apply(QStringLiteral("dark-gold"));   // default theme
 
-    MainWindow w;
+    MainWindow w(&theme);
     w.show();
     return QApplication::exec();
 }

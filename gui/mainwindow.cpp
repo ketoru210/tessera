@@ -8,11 +8,12 @@
 #include "mainwindow.h"
 #include "portpopup.h"
 #include "serialport.h"
+#include "settingsdialog.h"
 #include "ui_mainwindow.h"
 #include "core.h"
 
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(ThemeManager *theme, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -135,6 +136,11 @@ MainWindow::MainWindow(QWidget *parent)
     connect(repeat_timer_, &QTimer::timeout, this, &MainWindow::do_send);
     connect(ui->repeat_button, &QPushButton::clicked,
             this, &MainWindow::on_repeat_clicked);
+
+    // settings: a centered floating overlay; gear opens it (theme picker inside)
+    settings_ = new SettingsDialog(theme, this);
+    connect(ui->setting_button, &QToolButton::clicked,
+            this, [this] { settings_->open(); });
 }
 
 MainWindow::~MainWindow()

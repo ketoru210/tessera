@@ -6,6 +6,7 @@ qt_add_executable(tessera
     mainwindow.cpp mainwindow.h mainwindow.ui
     portpopup.cpp  portpopup.h  portpopup.ui
     thememanager.cpp thememanager.h
+    settingsdialog.cpp settingsdialog.h
     themes.qrc
 )
 

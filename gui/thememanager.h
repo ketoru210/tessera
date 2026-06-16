@@ -36,6 +36,10 @@ public:
     QStringList available() const;   // built-in + user theme names (built-in first)
     QString     user_dir()  const;   // writable dir users drop custom .json palettes into
 
+    // Human-readable label from a palette's "name" field (falls back to the file
+    // basename). Drives the settings theme picker's option text.
+    QString     display_name(const QString& theme_name) const;
+
 signals:
     void changed(const QString& theme_name);
 
