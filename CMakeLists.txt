@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(tessera LANGUAGES CXX)
+project(tessera VERSION 1.0.0 LANGUAGES CXX)
 
 # Export compile_commands.json for clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

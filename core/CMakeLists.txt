@@ -20,3 +20,7 @@ target_include_directories(core
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+# Inject the single source-of-truth version (root project() VERSION) into the
+# binary, so version() never has to be hand-edited on release.
+target_compile_definitions(core PRIVATE TESSERA_VERSION="${PROJECT_VERSION}")
